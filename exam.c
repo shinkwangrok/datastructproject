@@ -13,11 +13,13 @@ typedef struct adj {
 typedef struct words{
 	char string[STRING_SIZE];
 	int number;
+	int color;
 }words;
 
 void words_init(words* self) {
 	strcpy_s(self->string, 40, ("none"));
 	self->number = 0;
+	self->color = 0;
 }
 
 typedef struct word{
@@ -26,11 +28,13 @@ typedef struct word{
 	struct word* nextword;
 }word;
 
+
 typedef struct user{
 	char id[ID_SIZE];
 	char name[NAME_SIZE];
 	int friendnumber;
 	int wordnumber;
+	int color;
 	word* wordpointer;
 	struct adj* friendpointer;
 }user;
@@ -40,6 +44,7 @@ void user_init(user* self) {
 	strcpy_s(self->name, 40, ("none"));
 	self->friendnumber = 0;
 	self->wordnumber = 0;
+	self->color = 0;
 	self->wordpointer = NULL;
 	self->friendpointer = NULL;
 }
@@ -90,6 +95,7 @@ int totaltweets(user* vertices)
 	return num;
 }
 
+
 void main()
 {
 	char time[100];
@@ -106,6 +112,9 @@ void main()
 	int tweetnum = 0;
 	int mintweet = 5000;
 	int maxtweet = 0;
+	struct words v;
+	user u;
+	word *w =(word*)malloc(sizeof(word));
 	user vertices[5000];
 	for (a = 0; a < 5000; a++) {
 		user_init(&vertices[a]);
@@ -154,6 +163,7 @@ void main()
 				fgets(w->string, STRING_SIZE, fp);
 				w->nextword = vertices[a].wordpointer;
 				vertices[a].wordpointer = w;
+				vertices[a].wordnumber++;
 				fgets(enter, sizeof(enter), fp);
 			}
 		}
@@ -181,7 +191,34 @@ void main()
 	{
 		words_init(&wordvertices[a]);
 	}
-
+	a = 0;
+	fopen_s(&fp, "word.txt", "rt");
+	while (feof(fp) == 0)
+	{
+		fgets(id1, sizeof(id1), fp);
+		fgets(time, sizeof(time), fp);
+		fgets(wordvertices[a].string, 40, fp);
+		fgets(enter, sizeof(enter), fp);
+		a++;
+	}
+	fclose(fp);
+	word *x = (word *)malloc(sizeof(word));
+	for (a = 0; a<5000; a ++)
+	{
+		x = vertices[a].wordpointer;
+		while (x != NULL)
+		{
+			for (b = 0; b < 5000; b++)
+			{
+				if (strcmp(wordvertices[b].string, x->string) == 0)
+				{
+					x->wordspointer = &wordvertices[b];
+					wordvertices[b].number = wordvertices[b].number +1;
+				}
+			}
+			x = x->nextword;
+		}
+	}
 	scanf_s("%d", &menu);
 	switch (menu) {
 	case 0:
@@ -212,9 +249,74 @@ void main()
 		printf("Minimum tweets per user:%d\n", mintweet);
 		printf("Maximum tweets per user:%d\n", maxtweet);
 		break;
-
+	case 2:
+		for (b = 0; b < 5; b++)
+		{
+			words_init(&v);
+			for (a = 0; a < 5000; a++)
+			{
+				if ((v.number < wordvertices[a].number)&&(wordvertices[a].color == 0))
+				{
+					v = wordvertices[a];
+				}
+			}
+			v.color = 1;
+			for (a = 0; a < 5000; a++)
+			{
+				if (v.number == wordvertices[a].number)
+				{
+					wordvertices[a].color = 1;
+				}
+			}
+			printf("%s", v.string);
+		}
+		break;
+	case 3:
+		for (b = 0; b <5; b++)
+		{
+			user_init(&u);
+			for (a = 0; a < 5000; a++)
+			{
+				if ((u.wordnumber < vertices[a].wordnumber) && (vertices[a].color == 0))
+				{
+					u = vertices[a]; 
+				}
+			}
+			for (a = 0; a < 5000; a++)
+			{
+				if (u.wordnumber == vertices[a].wordnumber)
+				{
+					vertices[a].color = 1;
+				}
+			}
+			printf("%s", u.id);
+		}
+		break;
+	case 4:
+		scanf_s("%s", words);
+		
+		for (a = 0; a < 5000; a++)
+		{
+			w = vertices[a].wordpointer;
+			while (w != NULL)
+			{
+				if (strcmp(w->string, words) == 0)
+				{
+					vertices[a].color = 2;
+				}
+				w = w->nextword;
+			}
+			if (vertices[a].color == 2)
+			{
+				printf("%s", vertices[a].id);
+			}
+		}
+		break;
+	case 5:
+		
 	default: break;
 	}
+
 	getchar();
 	getchar();
 }
