@@ -1,0 +1,50 @@
+Manual
+
+0번을 누르고 엔터치면 총유저수, 친구수, 트위트된 단어수가 표시됩니다.
+1번을 누르면 친구수/사용자수, 친구가 가장많은 사용자의 친구수, 친구가 가장적은 사용자의 친구수, 총트윗개수/사용자수, 가장트윗을 적게한 사용자의 트윗개수, 가장트윗을 많이한 사용자의 트윗개수가 출력됩니다.
+2번을 누르면 트윗이 가장많이된 상위5개 단어가 출력됩니다.
+3번을 누르면 가장 트윗을 많이한 상위 5명의 사용자 id가 출력됩니다.
+4번을 누르고 단어를 입력하면 그 단어를 사용한 사용자들의 id가 출력됩니다.
+5번을 눌르면 4번에서 입력한 단어를 트윗한 사용자들의 친구들 id가 출력됩니다.
+6번을 누르고 단어를 입력하면 그 단어에 해당되는 words노드의 트윗된 개수가 0이되고 각 사용자노드와 연결되는 word노드들의 linked list중에서 해당단어를 포함한 word노드들이 linkedlist에서 삭제됩니다.또한 사용자가 해당단어를 트윗한 개수만큼 사용자노드의 wordnumber(word노드들로 구성된 linkedlist의 길이.즉 트윗한개수)변수값이 감소합니다.
+7번을 누르고 단어를 입력하면 해당단어를 입력한 사용자들의 노드는 모두 초기화되고 초기화된 사용자와 친구인 사용자의 친구리스트(adj로 구성된 linkedlist)에서 초기화된 사용자의 노드가 삭제됩니다. 마지막으로 초기화된 사용자와 친구인 사용자의 노드에서 친구개수에 해당되는 변수값이 1감소합니다.
+8번을 누르면 사용자들간에 생성된 strongly connected components들 중에서 가장 노드의개수가 많은 상위5개의 strongly connected components가 사용자들의 id로 한줄씩 5줄이 출력됩니다.
+9번을 누르고 id를 입력하면 해당 id의 사용자에서 경로가 가장 짧은 사용자의 id가 출력됩니다.
+
+REPORT
+구조체 4개를 사용하였습니다. 첫번째 구조체는 user로 이름지었고 id, name, friendnumber, wordnumber, color, wordpointer, friendpointer 의 변수들은 각각 word.txt에 있는 아이디와 이름, 친구수, 트윗한단어개수, most tweeted words와 most tweeteduser를 찾기편하게 하기위한 변수, 사용자가 트윗한 단어들의 linkedlist의 시작점을 가리키는 포인터, 사용자이 친구들 linkedlist의 시작점을 가리키는 포인터 를 의미합니다. 두번째 구조체는 adj로 선언하였고 id, 다음 adj를 가리키는 포인터변수를 갖고있습니다. adj구조체 노드들은 각각의 user노드들의 친구linkedlist를 구성합니다. 세번째 구조체는 word로 선언하였고 각각의 user노드들의 tweet한단어들의 linkedlist를 구성합니다. 마지막 구조체는 words로 선언하였고 트윗된 단어를 포함하는 문자열, 그 단어가 트윗된 개수, 메뉴3,4번을 실행하기 위한 변수 color로 구성되어있습니다. 첨부한 그림자료를 보면 어떤식으로 구상했는지 알수있습니다.
+
+0번메뉴 실행예상: 174줄을보면 for루프안에 totaluser함수가 돌아갑니다.초기에 user노드 5000개를 배열로 선언하고 전부다 init_user함수로 초기화 하였습니다. 그다음에 user.txt의 내용을 0번인덱스부터 집어넣었기 때문에 user노드의 id값이 "none"(초기화된값)이 될때까지 루프를 돌리면 user의 개수를 알수있습니다. 친구의 개수는 total_friends함수에서 friend.txt파일을 3줄씩 읽으며 루프를 돌려서 알아냈습니다. 178줄을 보면 루프안에 totaltweet함수가 있습니다. totaltweet함수는 user노드를 변수로 받아서 해당 user가 트윗한 단어를 계산합니다. 모든 user노드에대해서 루프를 돌려 총 트윗수를 계산했습니다.
+
+1번메뉴 실행예상: average number of freiends는 0번메뉴에서 구한 총 친구수를 총유저수로 나누어서 구했습니다. minimumfriends는 각 user노드의 friendnumber변수에 친구개수가 들어가 있다는 것을 이용해서 구했습니다. 여기서 초기화된 값으 그대로 갖고있는 user노드들도 있기때문에 if문에서 user노드의 id값이 "none"인경우는 빼고 돌렸습니다. maximumfriends도 같은 방법으로 구했습니다.
+average tweet per user는 0번메뉴에서 구한 총트윗수를 총사용자수로 나눠서 구했습니다. minimumtweetsperuser는 181줄에서 구했습니다. totaltweet함수가 user인덱스를 받아서 해당 user가 트윗한 단어수를 반환하므로 이를 이용해서 구했습니다. maximum tweets per user도 마찬가지로 구했습니다.
+
+2번메뉴 실행예상: 270줄에서 계산합니다. 새로운 words 변수 v를 하나 선언하고 초기화합니다. 그다음에 모든 words노드들에대해서 루프를 돌려 number값이 가장 큰 노드를 찾은후 다음번 큰값을 찾을때 제외되도록 color변수값을 1로 설정합니다.
+
+3번메뉴 실행예상: 286줄에서 계산합니다. usernode u를 하나 선언하고 초기화합니다.모든 user노드들에 대해서 루프를 돌려 wordnumber값이 가장 큰 user노드를 찾은후 그 usernode의 color를 1로만들어 다음번 큰값을 찾을때 제외되게 합니다.
+
+4번메뉴 실행예상 : 우선 찾고자하는 단어를 입력받습니다. 그리고 user노드의 word링크드리스트를 조사해서 입력받은 단어를 트윗한적이 있으면 color변수를 2로만든후 color변수가 2인 user노드들을 출력합니다. 실행이 안되는데 이유를 모르겠습니다.
+
+5번메뉴 실행예상: 4번메뉴에서 찾은 사용자들의 친구들을 모두 출력해야합니다. 4번노드에서 찾은 사용자들은 모두 color변수가 2가 되었으므로 color변수가 2인 모든 사용자들의 firend링크드리스트를 통해서 친구들을 출력합니다. 실행이 안됩니다.
+
+6번메뉴 실행예상: 삭제하고자 하는 단어를 입력받습니다. 입력받은 단어를 트윗한 사용자들의 word링크드리스트에서 해당 word노드를 삭제하고 입력받은 단어에 해당되는 words노드를 초기화시킵니다. 실행이 안됩니다.
+
+7번메뉴 실행예상: 단어를 입력받습니다. 모든 user의 word 링크드리스트를 조사해서 해당단어가 트윗됬을때마다 해당words노드의 number값을 1씩 감소시키고난후 현재조사중인 user를 친구로 등록하고 있는 user가 있으면 그 user의 friend링크드리스트에서 조사중인 user를 삭제합니다. 그리고나서 조사중인 user의 노드를 초기화합니다. 실행이 안됩니다.
+
+더 향상시킬방향: 8,9번을 구현하고 4,5,6,7번의 오류를 수정합니다.
+
+self evaluation
+submit a github account 10/10
+commit source code displaying menu 10/10
+commit the first draft of manual 10/10
+read data files 20/20
+statistics 20/20
+top 5 most tweeted words 10/10
+top 5 most tweeted users 5/5
+find all users who mentioned a word 5/10
+find all users who are friend of the above user 2/5
+top 5 strongly connected components 0/10
+find shortest path form a user(id) 0/10
+total - 92/120
+
+2011190704 신광록. 소스코드 최종본은 kwang.c입니다. 참조할 그림파일은 그림1입니다.
